@@ -6,6 +6,10 @@ import os, sys, time, platform, random
 import re, json, cookielib
 from getpass import getpass
 
+import requests, termcolor
+reload(sys)   
+sys.setdefaultencoding('utf-8')
+
 # requirements
 import requests, termcolor
 
@@ -67,8 +71,11 @@ class AccountError(Exception):
 
 
 def download_captcha():
+     headers = {
+        'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36",
+    }
     url = "https://www.zhihu.com/captcha.gif"
-    r = requests.get(url, params={"r": random.random(), "type": "login"}, verify=False)
+    r = requests.get(url, params={"r": random.random(), "type": "login"}, headers= headers,verify=False)
     if int(r.status_code) != 200:
         raise NetworkError(u"验证码请求失败")
     image_name = u"verify." + r.headers['content-type'].split("/")[1]
